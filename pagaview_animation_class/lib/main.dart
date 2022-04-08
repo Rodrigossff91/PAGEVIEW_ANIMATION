@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -56,20 +58,37 @@ class _MyHomePageState extends State<MyHomePage> {
             itemCount: 10,
             itemBuilder: ((context, page) {
               late double value;
+              late bool isCurrent;
 
               if (page <= currentPage.floor()) {
                 value = currentPage - page;
                 value = 1 - value;
+                isCurrent = true;
               } else if (page > currentPage.floor()) {
                 value = page - currentPage;
                 value = 1 - value;
+                isCurrent = false;
               }
 
-              return Opacity(
-                opacity: value,
-                child: Container(
-                  child: Center(child: Text("Page $page")),
-                  color: page % 2 == 0 ? Colors.red : Colors.green,
+              // Rotacionar de pontos a pontos
+              var rotateAnimation =
+                  lerpDouble(isCurrent ? 0.87 : -0.87, 0, value) ?? 0.0;
+              // Profundidade tamanho
+              var sizeAnimation = lerpDouble(0.50, 1, value);
+              // Opacidade
+              var opacityAnimation =
+                  const Interval(0.5, 1.0).transformInternal(value);
+
+              return Transform(
+                transform: Matrix4.identity()
+                  ..rotateZ(rotateAnimation)
+                  ..scale(sizeAnimation),
+                child: Opacity(
+                  opacity: opacityAnimation,
+                  child: Container(
+                    child: Center(child: Text("Page $page")),
+                    color: page % 2 == 0 ? Colors.red : Colors.green,
+                  ),
                 ),
               );
             })));
