@@ -56,6 +56,7 @@ class _MyHomePageState extends State<MyHomePage> {
         body: PageView.builder(
             controller: controller,
             itemCount: 10,
+            scrollDirection: Axis.vertical,
             itemBuilder: ((context, page) {
               late double value;
               late bool isCurrent;
@@ -80,8 +81,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   const Interval(0.5, 1.0).transformInternal(value);
 
               return Transform(
+                alignment: Alignment.center,
+                // transform: Matrix4.identity()
+                //   ..rotateZ(rotateAnimation)
+                //   ..scale(sizeAnimation),
                 transform: Matrix4.identity()
-                  ..rotateZ(rotateAnimation)
+                  ..rotateX(rotateAnimation)
                   ..scale(sizeAnimation),
                 child: Opacity(
                   opacity: opacityAnimation,
